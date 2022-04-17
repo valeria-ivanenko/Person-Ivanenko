@@ -12,17 +12,21 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Desktop.Person_Ivanenko.Tools.Controls;
+using Desktop.Person_Ivanenko.ViewModels;
 
-namespace Desktop.Person_Ivanenko
+namespace Desktop.Person_Ivanenko.Views
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+
+    public partial class PersonView : UserControl
     {
-        public MainWindow()
+        private PersonViewModel _viewModel;
+        public PersonView()
         {
             InitializeComponent();
+            DataContext = _viewModel = new PersonViewModel();
         }
+
+
     }
 }

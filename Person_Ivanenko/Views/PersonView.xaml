@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="Desktop.Person_Ivanenko.Views.PersonView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Desktop.Person_Ivanenko.Views"
+             xmlns:controls1="clr-namespace:Desktop.Person_Ivanenko.Tools.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <controls1:TextBoxWithCaption x:Name="FirstName" Grid.Row="0" Grid.Column="0" Caption="First Name" Text="{Binding FirstName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" ></controls1:TextBoxWithCaption>
+        <controls1:TextBoxWithCaption x:Name="LastName" Grid.Row="1" Grid.Column="0" Caption="Last Name" Text="{Binding LastName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></controls1:TextBoxWithCaption>
+        <controls1:TextBoxWithCaption x:Name="Email" Grid.Row="2" Grid.Column="0" Caption="E-mail" Text="{Binding Email, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></controls1:TextBoxWithCaption>
+        <DatePicker Name="DpDateOfBirth" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"  DisplayDate="1/1/2002" SelectedDate="{Binding DateOfBirth, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"></DatePicker>
+        <Button Name="BProceed" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="25" Margin="5" Content="Proceed" />
+    </Grid>
+</UserControl>
