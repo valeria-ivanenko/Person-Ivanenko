@@ -12,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Desktop.Person_Ivanenko.Tools.Controls;
 using Desktop.Person_Ivanenko.ViewModels;
 
 namespace Desktop.Person_Ivanenko.Views
@@ -27,6 +26,17 @@ namespace Desktop.Person_Ivanenko.Views
             DataContext = _viewModel = new PersonViewModel();
         }
 
+        private void TboxesChanged_TextChanged(object sender, TextChangedEventArgs e)
+        {
+           if (string.IsNullOrWhiteSpace(TbFirstName.Text) || string.IsNullOrWhiteSpace(TbLastName.Text)
+                || string.IsNullOrWhiteSpace(TbEmail.Text))
+            {
+                BProceed.IsEnabled = false;
+            } else
+            {
+                BProceed.IsEnabled = true;
+            }
+        }
 
     }
 }

@@ -9,10 +9,11 @@ namespace Desktop.Person_Ivanenko.Models
     class Person
     {
         #region Fields
-        private string _firstName = "Valeria";
-        private string _lastName = "Ivanenko";
-        private string _email = "@icloud.com";
-        private DateTime _dateOfBirth = DateTime.Now;
+        private string _firstName;
+        private string _lastName;
+        private string _email;
+        private DateTime _defaultDOB = DateTime.Parse("1/1/0001");
+        private DateTime _dateOfBirth = DateTime.Parse("1/1/0001");
         public readonly bool _isAdult;
         public readonly string _sunSign;
         public readonly string _chineseSign;
@@ -67,6 +68,18 @@ namespace Desktop.Person_Ivanenko.Models
                 _dateOfBirth = value;
             }
         }
+
+        public DateTime DefaultDOB
+        {
+            get
+            {
+                return _defaultDOB;
+            }
+            set
+            {
+                _defaultDOB = value;
+            }
+        }
         #endregion
 
         #region Constructors
@@ -115,7 +128,7 @@ namespace Desktop.Person_Ivanenko.Models
 
         public int GetAge()
         {
-            if (DateOfBirth.Equals(null))
+            if (DateOfBirth.Equals(DefaultDOB))
             {
                 return 0;
             }
@@ -127,6 +140,10 @@ namespace Desktop.Person_Ivanenko.Models
 
         public bool IsAdult(int age)
         {
+            if (DateOfBirth.Equals(DefaultDOB))
+            {
+                return false;
+            }
             if (age >= 18)
             {
                 return true;
@@ -137,86 +154,93 @@ namespace Desktop.Person_Ivanenko.Models
 
         public string SetZodiac()
         {
+            if (DateOfBirth.Equals(DefaultDOB))
+            {
+                return "No Sign";
+            }
             switch (DateOfBirth.Month)
             {
                 case 1:
                     if (DateOfBirth.Day <= 20) return  "Capricorn";
                     else
                     { return "Aquarius"; }
-                    break;
                 case 2:
                     if (DateOfBirth.Day <= 19)
                     { return "Aquarius"; }
                     else
                     { return "Pisces"; }
-                    break;
+                    
                 case 3:
                     if (DateOfBirth.Day <= 20)
                     { return "Pisces"; }
                     else
                     { return "Aries"; }
-                    break;
+                    
                 case 4:
                     if (DateOfBirth.Day <= 20)
                     { return "Aries"; }
                     else
                     { return "Taurus"; }
-                    break;
+                    
                 case 5:
                     if (DateOfBirth.Day <= 21)
                     { return "Taurus"; }
                     else
                     { return  "Gemini"; }
-                    break;
+                    
                 case 6:
                     if (DateOfBirth.Day <= 22)
                     { return "Gemini"; }
                     else
                     { return "Cancer"; }
-                    break;
+                    
                 case 7:
                     if (DateOfBirth.Day <= 22)
                     { return "Cancer"; }
                     else
                     { return "Leo"; }
-                    break;
+                    
                 case 8:
                     if (DateOfBirth.Day <= 23)
                     { return "Leo"; }
                     else
                     { return "Virgo"; ; }
-                    break;
+                    
                 case 9:
                     if (DateOfBirth.Day <= 23)
                     { return "Virgo"; }
                     else
                     { return "Libra"; }
-                    break;
+                    
                 case 10:
                     if (DateOfBirth.Day <= 23)
                     { return "Libra"; }
                     else
                     { return "Scorpio"; ; }
-                    break;
+                    
                 case 11:
                     if (DateOfBirth.Day <= 22)
                     { return  "Scorpio"; }
                     else
                     { return  "Sagittarius"; }
-                    break;
+                    
                 case 12:
                     if (DateOfBirth.Day <= 21)
                     { return  "Sagittarius"; }
                     else
                     { return "Capricorn"; }
-                    break;
+                    
                 default:
                     return "No Sign";
-                    break;
+                    
             }
         }
         public string SetChineseZodiac()
         {
+            if (DateOfBirth.Equals(DefaultDOB))
+            {
+                return "No Sign";
+            }
             string[] animals = { "Rat", "Ox", "Tiger", "Rabbit", "Dragon", "Snake", "Horse", "Goat", "Monkey", "Rooster", "Dog", "Pig" };
             string[] elements = { "Wood", "Fire", "Earth", "Metal", "Water" };
 
@@ -224,12 +248,12 @@ namespace Desktop.Person_Ivanenko.Models
             int ei = (int)Math.Floor((DateOfBirth.Year - 4.0) % 10 / 2);
             int ai = (DateOfBirth.Year - 4) % 12;
 
-            return "Rat";
+            return elements[ei] + " " + animals[ai];
         }
 
         public bool IsBirthday()
         {
-            return DateOfBirth.Equals(DateTime.Today);
+            return (DateOfBirth.Day.Equals(DateTime.Today.Day) && DateOfBirth.Month.Equals(DateTime.Today.Month));
         }
     }
 }

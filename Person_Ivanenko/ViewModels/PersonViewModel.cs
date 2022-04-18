@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,11 +10,14 @@ using Desktop.Person_Ivanenko.Tools;
 
 namespace Desktop.Person_Ivanenko.ViewModels
 {
-    class PersonViewModel
+    class PersonViewModel : INotifyPropertyChanged
     {
         #region Fields
         private Person _person = new Person();
         private RelayCommand<object> _proceedCommand;
+        private bool _isEnabled;
+
+        public event PropertyChangedEventHandler PropertyChanged;
         #endregion
 
         #region Properties
@@ -25,7 +29,11 @@ namespace Desktop.Person_Ivanenko.ViewModels
             }
             set
             {
-                _person.FirstName = value;
+                if (_person.FirstName != value)
+                {
+                    _person.FirstName = value;
+                }
+
             }
         }
 
@@ -37,7 +45,10 @@ namespace Desktop.Person_Ivanenko.ViewModels
             }
             set
             {
-                _person.LastName = value;
+                if (_person.LastName != value)
+                {
+                    _person.LastName = value;
+                }
             }
         }
 
@@ -49,7 +60,10 @@ namespace Desktop.Person_Ivanenko.ViewModels
             }
             set
             {
-                _person.Email = value;
+                if (_person.Email != value)
+                {
+                    _person.Email = value;
+                }
             }
         }
 
@@ -61,7 +75,31 @@ namespace Desktop.Person_Ivanenko.ViewModels
             }
             set
             {
-                _person.DateOfBirth = value;
+                if (_person.DateOfBirth != value)
+                {
+                    _person.DateOfBirth = value;
+                }
+            }
+        }
+
+        public bool IsEnabled
+        {
+            get
+            {
+                return _isEnabled;
+            }
+            set
+            {
+                _isEnabled = value;
+                OnPropertyChange("IsEnabled");
+            }
+        }
+
+        private void OnPropertyChange(string v)
+        {
+            if(v != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(v));
             }
         }
 
@@ -75,26 +113,56 @@ namespace Desktop.Person_Ivanenko.ViewModels
             }
         }
 
-        private void Commit()
+        private async void Commit()
         {
-            if (_person._isBirthday == true)
-            {
-                MessageBox.Show("Happy Birthday!");
-            }
-            if (_person.GetAge() < 0 || _person.GetAge() > 135)
+            _person = await Task.Run(() => new Person(FirstName, LastName, Email, DateOfBirth));
+            int age = _person.GetAge();
+            if (age < 0 || age > 135)
             {
                 MessageBox.Show("Incorrect Date!");
+                return;
             }
-            else
+            if (_person._isBirthday)
             {
-                MessageBox.Show(_person.FirstName + " " + _person.LastName + " " + _person.Email + " " + _person.DateOfBirth + " "
-                + _person._isAdult + " " + _person._isBirthday + " " + _person._sunSign + " " + _person._chineseSign + " ");
+                MessageBox.Show("Happy Birthday!");
+                MessageBox.Show("First Name: " + _person.FirstName
+                    + "\nLast Name: " + _person.LastName
+                    + "\nEmail: " + _person.Email
+                    + "\nDate Of Birth: " + _person.DateOfBirth
+                    + "\nIs Adult: " + _person._isAdult
+                    + "\nIs Birthday: " + _person._isBirthday
+                    + "\nSun Sign: " + _person._sunSign
+                    + "\nChinese SIgn: " + _person._chineseSign);
             }
+            if (_person.DateOfBirth.Equals(_person.DefaultDOB))
+            {
+                MessageBox.Show("First Name: " + _person.FirstName
+                        + "\nLast Name: " + _person.LastName
+                        + "\nEmail: " + _person.Email
+                        + "\nDate Of Birth: None " 
+                        + "\nIs Adult: " + _person._isAdult
+                        + "\nIs Birthday: " + _person._isBirthday
+                        + "\nSun Sign: " + _person._sunSign
+                        + "\nChinese SIgn: " + _person._chineseSign);
+            }
+            else if (!_person._isBirthday)
+            {
+                MessageBox.Show("First Name: " + _person.FirstName
+                        + "\nLast Name: " + _person.LastName
+                        + "\nEmail: " + _person.Email
+                        + "\nDate Of Birth: " + _person.DateOfBirth
+                        + "\nIs Adult: " + _person._isAdult
+                        + "\nIs Birthday: " + _person._isBirthday
+                        + "\nSun Sign: " + _person._sunSign
+                        + "\nChinese SIgn: " + _person._chineseSign);
+            }
+            
         }
 
         private bool CanExecute(object obj)
         {
-           return true; 
+            
+            return true; 
         }
 
 

@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Desktop.Person_Ivanenko.Views"
-             xmlns:controls1="clr-namespace:Desktop.Person_Ivanenko.Tools.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -14,12 +13,19 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
-        <controls1:TextBoxWithCaption x:Name="FirstName" Grid.Row="0" Grid.Column="0" Caption="First Name" Text="{Binding FirstName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" ></controls1:TextBoxWithCaption>
-        <controls1:TextBoxWithCaption x:Name="LastName" Grid.Row="1" Grid.Column="0" Caption="Last Name" Text="{Binding LastName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></controls1:TextBoxWithCaption>
-        <controls1:TextBoxWithCaption x:Name="Email" Grid.Row="2" Grid.Column="0" Caption="E-mail" Text="{Binding Email, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></controls1:TextBoxWithCaption>
-        <DatePicker Name="DpDateOfBirth" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"  DisplayDate="1/1/2002" SelectedDate="{Binding DateOfBirth, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"></DatePicker>
-        <Button Name="BProceed" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="25" Margin="5" Content="Proceed" />
+        <TextBlock Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,5,5,2" Text="First Name" FontSize="9" Foreground="Gray"/>
+        <TextBox Name="TbFirstName" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="25" Margin="5,0,5,5" Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TboxesChanged_TextChanged"/>
+        <TextBlock Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,5,5,2" Text="Last Name" FontSize="9" Foreground="Gray"/>
+        <TextBox Name="TbLastName" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="25" Margin="5,0,5,5" Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TboxesChanged_TextChanged"/>
+        <TextBlock Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,5,5,2" Text="Email" FontSize="9" Foreground="Gray"/>
+        <TextBox Name="TbEmail" Grid.Row="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="25" Margin="5,0,5,5" Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TboxesChanged_TextChanged"/>
+        <TextBlock Grid.Row="6" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,5,5,2" Text="Date Of Birth" FontSize="9" Foreground="Gray"/>
+        <DatePicker Name="DpDateOfBirth" Grid.Row="7" Grid.Column="0" HorizontalAlignment="Left" Width="500" Margin="5,0,5,5" SelectedDate="{Binding DateOfBirth, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"></DatePicker>
+        <Button Name="BProceed" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="25" Margin="5" IsEnabled="{Binding IsEnabled}" Content="Proceed" Command="{Binding ProceedCommand}" />
     </Grid>
 </UserControl>
