@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Desktop.Person_Ivanenko.Models
 {
@@ -12,6 +13,7 @@ namespace Desktop.Person_Ivanenko.Models
         private string _firstName;
         private string _lastName;
         private string _email;
+        private int _age;
         private DateTime _defaultDOB = DateTime.Parse("1/1/0001");
         private DateTime _dateOfBirth = DateTime.Parse("1/1/0001");
         public readonly bool _isAdult;
@@ -57,6 +59,18 @@ namespace Desktop.Person_Ivanenko.Models
             }
         }
 
+        public int Age
+        {
+            get
+            {
+                return _age;
+            }
+            set
+            {
+                _age = value;
+            }
+        }
+
         public DateTime DateOfBirth
         {
             get
@@ -80,6 +94,7 @@ namespace Desktop.Person_Ivanenko.Models
                 _defaultDOB = value;
             }
         }
+
         #endregion
 
         #region Constructors
@@ -89,10 +104,12 @@ namespace Desktop.Person_Ivanenko.Models
             LastName = lastName;
             Email = email;
             DateOfBirth = dateOfBirth;
-            _isAdult = IsAdult(GetAge());
+            GetAgeAsync();
+            _isAdult = IsAdult();
             _sunSign = SetZodiac();
             _chineseSign = SetChineseZodiac();
             _isBirthday = IsBirthday();
+            ValidatePerson();
         }
 
         public Person(string firstName, string lastName, string email)
@@ -101,10 +118,12 @@ namespace Desktop.Person_Ivanenko.Models
             LastName = lastName;
             Email = email;
             DateOfBirth = DateTime.Now;
-            _isAdult = IsAdult(GetAge());
+            GetAgeAsync();
+            _isAdult = IsAdult();
             _sunSign = SetZodiac();
             _chineseSign = SetChineseZodiac();
             _isBirthday = IsBirthday();
+            ValidatePerson();
         }
 
         public Person(string firstName, string lastName, DateTime dateOfBirth)
@@ -113,10 +132,12 @@ namespace Desktop.Person_Ivanenko.Models
             LastName = lastName;
             DateOfBirth = dateOfBirth;
             Email = null;
-            _isAdult = IsAdult(GetAge());
+            GetAgeAsync();
+            _isAdult = IsAdult();
             _sunSign = SetZodiac();
             _chineseSign = SetChineseZodiac();
             _isBirthday = IsBirthday();
+            ValidatePerson();
         }
 
         public Person()
@@ -125,7 +146,10 @@ namespace Desktop.Person_Ivanenko.Models
         }
 
         #endregion
-
+        public async void GetAgeAsync()
+        {
+            Age = await Task.Run(() => GetAge());
+        }
         public int GetAge()
         {
             if (DateOfBirth.Equals(DefaultDOB))
@@ -138,13 +162,13 @@ namespace Desktop.Person_Ivanenko.Models
             return age;
         }
 
-        public bool IsAdult(int age)
+        public bool IsAdult()
         {
             if (DateOfBirth.Equals(DefaultDOB))
             {
                 return false;
             }
-            if (age >= 18)
+            if (Age >= 18)
             {
                 return true;
             }
@@ -255,5 +279,40 @@ namespace Desktop.Person_Ivanenko.Models
         {
             return (DateOfBirth.Day.Equals(DateTime.Today.Day) && DateOfBirth.Month.Equals(DateTime.Today.Month));
         }
+
+        public void ValidatePerson()
+        {
+            if (Age > 135 || Age < 0)
+            {
+                throw new InvalidDateException(DateOfBirth);
+            }
+            if (!Email.Contains('@') || !Email.Contains('.'))
+            {
+                throw new InvalidEmailException(Email);
+            }
+        }
     }
+
+    [Serializable]
+    class InvalidDateException : Exception
+    {
+        public InvalidDateException() { }
+        public InvalidDateException(DateTime dateOfBirth)
+        {
+            MessageBox.Show("Exception occured, date " + dateOfBirth + " is incorrect");
+        }
+            
+    }
+
+    [Serializable]
+    class InvalidEmailException : Exception
+    {
+        public InvalidEmailException() { }
+        public InvalidEmailException(string email)
+        {
+            MessageBox.Show("Exception occured, email should contain @ and .");
+        }
+
+    }
+
 }

@@ -64,6 +64,7 @@ namespace Desktop.Person_Ivanenko.ViewModels
                 {
                     _person.Email = value;
                 }
+                OnPropertyChange("Email");
             }
         }
 
@@ -79,6 +80,7 @@ namespace Desktop.Person_Ivanenko.ViewModels
                 {
                     _person.DateOfBirth = value;
                 }
+                OnPropertyChange("DateOfBitrh");
             }
         }
 
@@ -115,8 +117,21 @@ namespace Desktop.Person_Ivanenko.ViewModels
 
         private async void Commit()
         {
-            _person = await Task.Run(() => new Person(FirstName, LastName, Email, DateOfBirth));
-            int age = _person.GetAge();
+            try
+            {
+                _person = await Task.Run(() => new Person(FirstName, LastName, Email, DateOfBirth));
+                _person.ValidatePerson();
+            } 
+            catch (InvalidDateException ex)
+            {
+                DateOfBirth = _person.DefaultDOB;
+            }
+            catch ( InvalidEmailException ex)
+            {
+                Email = "";
+            }
+
+            int age = _person.Age;
             if (age < 0 || age > 135)
             {
                 MessageBox.Show("Incorrect Date!");
