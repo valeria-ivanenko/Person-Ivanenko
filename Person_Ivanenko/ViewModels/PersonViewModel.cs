@@ -125,14 +125,7 @@ namespace Desktop.Person_Ivanenko.ViewModels
             if (_person._isBirthday)
             {
                 MessageBox.Show("Happy Birthday!");
-                MessageBox.Show("First Name: " + _person.FirstName
-                    + "\nLast Name: " + _person.LastName
-                    + "\nEmail: " + _person.Email
-                    + "\nDate Of Birth: " + _person.DateOfBirth
-                    + "\nIs Adult: " + _person._isAdult
-                    + "\nIs Birthday: " + _person._isBirthday
-                    + "\nSun Sign: " + _person._sunSign
-                    + "\nChinese SIgn: " + _person._chineseSign);
+                ShowInfo();
             }
             if (_person.DateOfBirth.Equals(_person.DefaultDOB))
             {
@@ -147,18 +140,22 @@ namespace Desktop.Person_Ivanenko.ViewModels
             }
             else if (!_person._isBirthday)
             {
-                MessageBox.Show("First Name: " + _person.FirstName
-                        + "\nLast Name: " + _person.LastName
-                        + "\nEmail: " + _person.Email
-                        + "\nDate Of Birth: " + _person.DateOfBirth
-                        + "\nIs Adult: " + _person._isAdult
-                        + "\nIs Birthday: " + _person._isBirthday
-                        + "\nSun Sign: " + _person._sunSign
-                        + "\nChinese SIgn: " + _person._chineseSign);
+                ShowInfo();
             }
             
         }
 
+        public void ShowInfo()
+        {
+            MessageBox.Show("First Name: " + _person.FirstName
+                    + "\nLast Name: " + _person.LastName
+                    + "\nEmail: " + _person.Email
+                    + "\nDate Of Birth: " + _person.DateOfBirth
+                    + "\nIs Adult: " + _person._isAdult
+                    + "\nIs Birthday: " + _person._isBirthday
+                    + "\nSun Sign: " + _person._sunSign
+                    + "\nChinese SIgn: " + _person._chineseSign);
+        }
         private bool CanExecute(object obj)
         {
             
