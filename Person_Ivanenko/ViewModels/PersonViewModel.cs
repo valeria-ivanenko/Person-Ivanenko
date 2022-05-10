@@ -33,7 +33,7 @@ namespace Desktop.Person_Ivanenko.ViewModels
                 {
                     _person.FirstName = value;
                 }
-
+                OnPropertyChange("FirstName");
             }
         }
 
@@ -49,6 +49,7 @@ namespace Desktop.Person_Ivanenko.ViewModels
                 {
                     _person.LastName = value;
                 }
+                OnPropertyChange("LastName");
             }
         }
 
@@ -121,15 +122,28 @@ namespace Desktop.Person_Ivanenko.ViewModels
             {
                 _person = await Task.Run(() => new Person(FirstName, LastName, Email, DateOfBirth));
                 _person.ValidatePerson();
-            } 
+            }
+            catch (InvalidFirstNameException ex)
+            {
+                FirstName = "";
+                return;
+            }
+            catch (InvalidLastNameException ex)
+            {
+                LastName = "";
+                return;
+            }
+            catch (InvalidEmailException ex)
+            {
+                Email = "";
+                return;
+            }
             catch (InvalidDateException ex)
             {
                 DateOfBirth = _person.DefaultDOB;
+                return;
             }
-            catch ( InvalidEmailException ex)
-            {
-                Email = "";
-            }
+            
 
             int age = _person.Age;
             if (age < 0 || age > 135)

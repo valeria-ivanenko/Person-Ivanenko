@@ -290,6 +290,14 @@ namespace Desktop.Person_Ivanenko.Models
             {
                 throw new InvalidEmailException(Email);
             }
+            if (!LastName.All(char.IsLetter))
+            {
+                throw new InvalidLastNameException(LastName);
+            }
+            if (!FirstName.All(char.IsLetter))
+            {
+                throw new InvalidFirstNameException(FirstName);
+            }
         }
     }
 
@@ -311,6 +319,28 @@ namespace Desktop.Person_Ivanenko.Models
         public InvalidEmailException(string email)
         {
             MessageBox.Show("Exception occured, email should contain @ and .");
+        }
+
+    }
+
+    [Serializable]
+    class InvalidFirstNameException : Exception
+    {
+        public InvalidFirstNameException() { }
+        public InvalidFirstNameException(string email)
+        {
+            MessageBox.Show("Exception occured, First name should contain letters");
+        }
+
+    }
+
+    [Serializable]
+    class InvalidLastNameException : Exception
+    {
+        public InvalidLastNameException() { }
+        public InvalidLastNameException(string email)
+        {
+            MessageBox.Show("Exception occured, Last name should contain letters");
         }
 
     }
