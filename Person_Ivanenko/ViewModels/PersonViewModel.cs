@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Desktop.Person_Ivanenko.Models;
+using Desktop.Person_Ivanenko.Repositories;
 using Desktop.Person_Ivanenko.Tools;
 
 namespace Desktop.Person_Ivanenko.ViewModels
@@ -14,13 +16,31 @@ namespace Desktop.Person_Ivanenko.ViewModels
     {
         #region Fields
         private Person _person = new Person();
-        private RelayCommand<object> _proceedCommand;
-        private bool _isEnabled;
-
+        private RelayCommand<object> _addCommand;
+        private RelayCommand<object> _deleteCommand;
+        private RelayCommand<object> _saveCommand;
+        private ObservableCollection<Person> _people;
+        private static FileRepository Repository = new FileRepository();
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
 
         #region Properties
+
+        public Person Person
+        {
+            get
+            {
+                return _person;
+            }
+            set
+            {
+                if (_person != value)
+                {
+                    _person = value;
+                }
+                OnPropertyChange("Person");
+            }
+        }
         public string FirstName
         {
             get
@@ -85,16 +105,13 @@ namespace Desktop.Person_Ivanenko.ViewModels
             }
         }
 
-        public bool IsEnabled
+        public ObservableCollection<Person> People
         {
-            get
+            get => _people;
+            private set
             {
-                return _isEnabled;
-            }
-            set
-            {
-                _isEnabled = value;
-                OnPropertyChange("IsEnabled");
+                _people = value;
+                OnPropertyChange("People");
             }
         }
 
@@ -107,21 +124,42 @@ namespace Desktop.Person_Ivanenko.ViewModels
         }
 
         #endregion
+        public PersonViewModel()
+        {
+            _people = new ObservableCollection<Person>(RandomPeople());
+        }
 
-        public RelayCommand<object> ProceedCommand
+        public RelayCommand<object> AddCommand
         {
             get
             {
-                return _proceedCommand ??= new RelayCommand<object>(_ => Commit(), CanExecute);
+                return _addCommand ??= new RelayCommand<object>(_ => AddPerson(), CanExecute);
             }
         }
 
-        private async void Commit()
+        public RelayCommand<object> DeleteCommand
+        {
+            get
+            {
+                return _deleteCommand ??= new RelayCommand<object>(_ => DeletePerson(), CanExecute);
+            }
+        }
+
+        public RelayCommand<object> SaveCommand
+        {
+            get
+            {
+                return _saveCommand ??= new RelayCommand<object>(_ => SavePeople(), CanExecute);
+            }
+        }
+
+        private async void AddPerson()
         {
             try
             {
                 _person = await Task.Run(() => new Person(FirstName, LastName, Email, DateOfBirth));
                 _person.ValidatePerson();
+                People.Add(_person);
             }
             catch (InvalidFirstNameException ex)
             {
@@ -173,8 +211,21 @@ namespace Desktop.Person_Ivanenko.ViewModels
             }
             
         }
+        private void DeletePerson()
+        {
+            People.Remove(Person);
+        }
 
-        public void ShowInfo()
+        private async void SavePeople()
+        {
+            Repository.CleanRepository();
+            foreach (var person in People)
+            {
+                await Repository.AddOrUpdateAsync(person);
+            }
+        }
+
+            public void ShowInfo()
         {
             MessageBox.Show("First Name: " + _person.FirstName
                     + "\nLast Name: " + _person.LastName
@@ -189,6 +240,52 @@ namespace Desktop.Person_Ivanenko.ViewModels
         {
             
             return true; 
+        }
+
+        public string RandomFirstName()
+        {
+            Random rnd = new Random();
+            string[] firstNameArray = new string[] { "Adam", "Alex", "Aaron", "Ben", "Carl", "Dan", "David",
+            "Edward", "Fred", "Frank", "George", "Hal", "Hank", "Ike", "John", "Jack", "Joe", "Larry",
+            "Monte", "Matthew", "Mark", "Nathan", "Otto", "Paul", "Peter", "Roger", "Roger", "Steve",
+            "Thomas", "Tim", "Ty", "Victor", "Walter" };
+            return firstNameArray[rnd.Next(32)];
+        }
+
+        public string RandomLastName()
+        {
+            Random rnd = new Random();
+            string[] lastNameArray = new string[] { "Anderson", "Ashwoon", "Aikin", "Bateman", "Bongard", "Bowers",
+            "Boyd", "Cannon", "Cast", "Deitz", "Dewalt", "Ebner", "Frick", "Hancock", "Haworth", "Hesch",
+            "Hoffman", "Kassing", "Knutson", "Lawless", "Lawicki", "Mccord", "McCormack", "Miller", "Myers",
+            "Zandt", "Vanderpoel", "Ventotla", "Vogal", "Wagle", "Wagner", "Wakefield", "Weinstein",
+            "McGinnis", "Mills", "Moody", "Moore", "Napier", "Nelson", "Norquist", "Nuttle", "Olson",
+            "Ostrander", "Reamer", "Reardon", "Reyes", "Rice", "Ripka", "Roberts", "Rogers"};
+            return lastNameArray[rnd.Next(49)];
+        }
+
+        public string MakeEmail(string first_name, string last_name)
+        {
+            return first_name.ToLower() + "." + last_name.ToLower() + "@ukr.net";
+        }
+        public DateTime RandomDOB()
+        {
+            Random rnd = new Random();
+            DateTime start = new DateTime(1887, 5, 17);
+            int range = (DateTime.Today - start).Days;
+            return start.AddDays(rnd.Next(range));
+        }
+
+        public ObservableCollection<Person> RandomPeople()
+        {
+            ObservableCollection<Person> randoms = new ObservableCollection<Person>();
+            for (int i = 0; i < 50; ++i)
+            {
+                string rand_first_name = RandomFirstName();
+                string rand_last_name = RandomLastName();
+                randoms.Add(new Person(rand_first_name, rand_last_name, MakeEmail(rand_first_name, rand_last_name), RandomDOB()));
+            }
+            return randoms;
         }
 
 

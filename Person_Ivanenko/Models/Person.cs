@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -71,6 +72,42 @@ namespace Desktop.Person_Ivanenko.Models
             }
         }
 
+        public bool IsAdult
+        {
+            get
+            {
+                return _isAdult;
+            }
+
+        }
+
+        public bool IsBirthday
+        {
+            get
+            {
+                return _isBirthday;
+            }
+
+        }
+
+        public string SunSign
+        {
+            get
+            {
+                return _sunSign;
+            }
+
+        }
+
+        public string ChineseSign
+        {
+            get
+            {
+                return _chineseSign;
+            }
+
+        }
+
         public DateTime DateOfBirth
         {
             get
@@ -104,11 +141,11 @@ namespace Desktop.Person_Ivanenko.Models
             LastName = lastName;
             Email = email;
             DateOfBirth = dateOfBirth;
-            GetAgeAsync();
-            _isAdult = IsAdult();
+            Age = GetAge();
+            _isAdult = GetIsAdult();
             _sunSign = SetZodiac();
             _chineseSign = SetChineseZodiac();
-            _isBirthday = IsBirthday();
+            _isBirthday = GetIsBirthday();
             ValidatePerson();
         }
 
@@ -118,11 +155,11 @@ namespace Desktop.Person_Ivanenko.Models
             LastName = lastName;
             Email = email;
             DateOfBirth = DateTime.Now;
-            GetAgeAsync();
-            _isAdult = IsAdult();
+            Age = GetAge();
+            _isAdult = GetIsAdult();
             _sunSign = SetZodiac();
             _chineseSign = SetChineseZodiac();
-            _isBirthday = IsBirthday();
+            _isBirthday = GetIsBirthday();
             ValidatePerson();
         }
 
@@ -132,11 +169,11 @@ namespace Desktop.Person_Ivanenko.Models
             LastName = lastName;
             DateOfBirth = dateOfBirth;
             Email = null;
-            GetAgeAsync();
-            _isAdult = IsAdult();
+            Age = GetAge();
+            _isAdult = GetIsAdult();
             _sunSign = SetZodiac();
             _chineseSign = SetChineseZodiac();
-            _isBirthday = IsBirthday();
+            _isBirthday = GetIsBirthday();
             ValidatePerson();
         }
 
@@ -146,10 +183,7 @@ namespace Desktop.Person_Ivanenko.Models
         }
 
         #endregion
-        public async void GetAgeAsync()
-        {
-            Age = await Task.Run(() => GetAge());
-        }
+       
         public int GetAge()
         {
             if (DateOfBirth.Equals(DefaultDOB))
@@ -162,7 +196,7 @@ namespace Desktop.Person_Ivanenko.Models
             return age;
         }
 
-        public bool IsAdult()
+        public bool GetIsAdult()
         {
             if (DateOfBirth.Equals(DefaultDOB))
             {
@@ -275,7 +309,7 @@ namespace Desktop.Person_Ivanenko.Models
             return elements[ei] + " " + animals[ai];
         }
 
-        public bool IsBirthday()
+        public bool GetIsBirthday()
         {
             return (DateOfBirth.Day.Equals(DateTime.Today.Day) && DateOfBirth.Month.Equals(DateTime.Today.Month));
         }
